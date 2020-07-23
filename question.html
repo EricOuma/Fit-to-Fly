@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!--Social meta tags-->
+    <meta property=”og:type” content=”application”/>
+    <meta property=”og:title” content=”FIT TO INTERACT”/>
+    <meta property=”og:description” content=”FIT TO INTERACT”/>
+    <meta property=”og:image” content=”https://github.com/EricOuma/Fit-to-Fly-web”/>
+    <meta property=”og:url” content=”https://github.com/EricOuma/Fit-to-Fly-web”/>
+    <meta property=”og:site_name” content=”FIT TO INTERACT”/>
+    <meta name=”twitter:title” content=”FIT TO INTERACT”>
+    <meta name=”twitter:description” content=”FIT TO INTERACT”>
+    <meta name=”twitter:image” content=”https://github.com/EricOuma/Fit-to-Fly-web”>
+    <meta name=”twitter:site” content=”@EricOuma”>
+    <meta name=”twitter:creator” content=”@EricOuma”>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+    <!--MAIN CSS-->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    
+    <!--Animation-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+
+    <title>Fit to Interact</title>
+  </head>
+  <body>
+    <div class="container">
+    <div id="header" class="col-12 d-flex justify-content-center">
+     <img src="img/logo.png" class="site-logo img-fluid pt-4" height="90" width="90"  alt="Site Logo"/>
+    </div>
+    <div id="main-section" class="main-section w-100 text-center p-4">
+    <p>1 of 10</p>
+     <h2 id="question">Do you have a dry cough?</h2>
+     <div class=""><i id="microphone" class="fas fa-microphone p-5"></i></div>
+    <div class="answers d-flex justify-content-center p-2">
+    <div class="yes bg-success p-4 rounded mr-5">YES</div>
+    <div class="no bg-warning p-4 rounded ml-5">NO&nbsp</div>
+    </div>
+    </div>
+    <div class="progress" style="height: 20px;">
+ <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+</div>
+    </div>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script>
+ const player = document.getElementById('player');
+
+ const handleSuccess = function(stream) {
+ const microphone = document.getElementById('microphone')
+ microphone.classList.add("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
+  const context = new AudioContext();
+  const source = context.createMediaStreamSource(stream);
+  const processor = context.createScriptProcessor(1024, 1, 1);
+
+  source.connect(processor);
+  processor.connect(context.destination);
+
+  processor.onaudioprocess = function(e) {
+    // Do something with the data, e.g. convert it to WAV
+    console.log(e.inputBuffer);
+  };
+ };
+
+ navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+     .then(handleSuccess);
+</script>
+  </body>
+</html>

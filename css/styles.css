@@ -1,0 +1,26 @@
+/* color code #1273EB*/
+/*Structure*/
+/*-----GENERAL------*/
+html, body {
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+/*-----TOP BAR------*/
+/*-----MAIN SECTION------*/
+.main-section .fa-microphone {
+    color: #1273EB;
+    font-size: 150px;
+}
+.fa-laugh-wink {
+    color: green;
+    font-size: 150px;
+}
+.answers div{
+    color: white;
+    font-size: 50px;
+}
+video {
+    height: 60vh!important;
+}
+/*-----FOOTER------*/
