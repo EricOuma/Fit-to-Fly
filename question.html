@@ -9,12 +9,12 @@
     <meta property=”og:type” content=”application”/>
     <meta property=”og:title” content=”FIT TO INTERACT”/>
     <meta property=”og:description” content=”FIT TO INTERACT”/>
-    <meta property=”og:image” content=”https://github.com/EricOuma/Fit-to-Fly-web”/>
-    <meta property=”og:url” content=”https://github.com/EricOuma/Fit-to-Fly-web”/>
+    <meta property=”og:image” content=”https://github.com/EricOuma/Fit-to-Interact-web”/>
+    <meta property=”og:url” content=”https://github.com/EricOuma/Fit-to-Interact-web”/>
     <meta property=”og:site_name” content=”FIT TO INTERACT”/>
     <meta name=”twitter:title” content=”FIT TO INTERACT”>
     <meta name=”twitter:description” content=”FIT TO INTERACT”>
-    <meta name=”twitter:image” content=”https://github.com/EricOuma/Fit-to-Fly-web”>
+    <meta name=”twitter:image” content=”https://github.com/EricOuma/Fit-to-Interact-web”>
     <meta name=”twitter:site” content=”@EricOuma”>
     <meta name=”twitter:creator” content=”@EricOuma”>
 
@@ -38,17 +38,15 @@
      <img src="img/logo.png" class="site-logo img-fluid pt-4" height="90" width="90"  alt="Site Logo"/>
     </div>
     <div id="main-section" class="main-section w-100 text-center p-4">
-    <p>1 of 10</p>
+    <p><span id="question-count"></span>&nbspof&nbsp<span id="total-questions"></span></p>
      <h2 id="question">Do you have a dry cough?</h2>
      <div class=""><i id="microphone" class="fas fa-microphone p-5"></i></div>
     <div class="answers d-flex justify-content-center p-2">
     <div class="yes bg-success p-4 rounded mr-5">YES</div>
     <div class="no bg-warning p-4 rounded ml-5">NO&nbsp</div>
     </div>
+    <h3 id="diagnostic">...diagnostic</h3>
     </div>
-    <div class="progress" style="height: 20px;">
- <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-</div>
     </div>
     
 
@@ -58,26 +56,114 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script>
- const player = document.getElementById('player');
+    $(function() {
+    // NOTE EVERYONE WITH COVID19 IS SYMPTOMATIC
+const questions = ["Do you have a cough", "Do you experience Fever or chills", "Do you experience shortness of breath or difficulty breathing", "Do you have muscle or body aches", "Do you have a sore throat", "Have you had close contact with someone diagnosed with COVID-19 or been notified that you may have been exposed to it"]
 
- const handleSuccess = function(stream) {
- const microphone = document.getElementById('microphone')
- microphone.classList.add("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
-  const context = new AudioContext();
-  const source = context.createMediaStreamSource(stream);
-  const processor = context.createScriptProcessor(1024, 1, 1);
+var responses = []
 
-  source.connect(processor);
-  processor.connect(context.destination);
 
-  processor.onaudioprocess = function(e) {
-    // Do something with the data, e.g. convert it to WAV
-    console.log(e.inputBuffer);
-  };
- };
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+//----------------------SPEECH RECOGNITION---------------------
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+    
+var answers = ['Yes', 'No'];
+var responded = false
+var grammar = '#JSGF V1.0; grammar answers; public <answer> = ' + answers.join(' | ') + ' ;'
+function recognitionSpeech() {
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    
+    speechRecognitionList.addFromString(grammar, 1);
+    
+    recognition.grammars = speechRecognitionList;
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    
+    const diagnostic = document.getElementById('diagnostic')
+    recognition.start();
+    recognition.onstart = function() {
+      console.log('Speech recognition service has started');
+      const microphone = document.getElementById('microphone')
+      microphone.classList.add("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
 
- navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-     .then(handleSuccess);
+    }
+
+    recognition.onspeechend = function() {
+      recognition.stop();
+      microphone.classList.remove("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
+      
+    }
+    recognition.onresult = function(event) {
+      var response = event.results[0][0].transcript;
+      if(response != 'yes' || response != 'no') {
+          diagnostic.textContent = "Kindly say 'YES' or 'NO'.";
+          //recognitionSpeech();
+      }
+      responded = true;
+      responses.push(response)
+      diagnostic.textContent = 'You said: ' + response + '.';
+      console.log('You said: ' + response + '.');
+      console.log('Confidence: ' + event.results[0][0].confidence);
+    }
+    
+    recognition.onnomatch = function(event) {
+      diagnostic.textContent = 'I didnt recognise that.';
+      //recognitionSpeech();
+    }
+    recognition.onerror = function(event) {
+      diagnostic.textContent = 'Error occurred in recognition: ' + event.error;
+      microphone.classList.remove("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
+    }
+};
+//------------------------------------------------
+const body = document.body;
+ //------SPEECH SYNTHESIS---------------------
+
+  body.onclick = () => {
+      var synth = window.speechSynthesis;
+      var inputTxt = document.querySelector('#question');
+      var voices = [];
+      voices = synth.getVoices();
+      var utterThis = new SpeechSynthesisUtterance(inputTxt.innerText);
+  
+      utterThis.voice = voices[2];
+  
+      utterThis.pitch = 1;
+      utterThis.rate = 0.9;
+      synth.speak(utterThis);
+      utterThis.onend = () => { recognitionSpeech()};
+
+      //if(synth.pending == false && synth.speaking == false) {
+      //console.log(synth.speaking)
+          //sleep(1000).then(() => { recognitionSpeech(); });
+      //}
+      }
+//-------SERIOUS QUESTIONING----------------
+document.querySelector('#total-questions').innerText = questions.length;
+(async function() {
+for (let i = 0; i < questions.length; i++) {
+ if(responded || i == 0) {
+     document.querySelector('#question-count').innerText = i + 1;
+     question.innerText = questions[i] + '?';
+     responded = false;
+ } else {
+     //wait
+ }
+ while(responded == false) {
+     await sleep(5000);
+ }
+}
+console.log(responses)
+sleep(3000).then(() => { window.open("thankyou.html", "_self"); });
+})();
+});
 </script>
   </body>
 </html>

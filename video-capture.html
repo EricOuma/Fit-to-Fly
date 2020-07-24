@@ -38,7 +38,7 @@
     <img src="img/logo.png" class="site-logo img-fluid pt-4" height="80" width="80"  alt="Site Logo"/>
     </div>
     <div id="main-section" class="main-section w-100 text-center p-4">
-    <h3>Identification...</h3>
+    <h3>Face Identification...</h3>
     <video id="player" class="" autoplay=true></video>
     <p>Make sure your face is inside the white circle.<p>
     </div>
@@ -51,6 +51,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script>
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
       var player = document.getElementById('player');
     
       var handleSuccess = function(stream) {
@@ -58,6 +61,7 @@
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         context.drawImage(player, 0, 0, canvas.width, canvas.height);
+        sleep(7000).then(() => { window.open("question.html", "_self"); });
       };
       
       // Stop all video streams.

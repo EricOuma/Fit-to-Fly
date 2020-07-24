@@ -1,0 +1,36 @@
+ //const player = document.getElementById('player');
+
+ //const handleSuccess = function(stream) {
+ //const microphone = document.getElementById('microphone')
+ //microphone.classList.add("animate__animated", "animate__heartBeat", "animate__infinite", "infinite", "animate__delay-2s")
+ //const sayHello = document.getElementById('say-hello')
+ //sayHello.classList.remove('invisible')
+ //sayHello.classList.add("animate__animated", "animate__zoomIn", "animate__delay-2s")
+ // const context = new AudioContext();
+ // const source = context.createMediaStreamSource(stream);
+ // const processor = context.createScriptProcessor(1024, 1, 1);
+
+ // source.connect(processor);
+ // processor.connect(context.destination);
+
+ // processor.onaudioprocess = function(e) {
+    // Do something with the data, e.g. convert it to WAV
+ //   console.log(e.inputBuffer);
+ // };
+ //};
+
+ //navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+     //.then(handleSuccess);
+     
+==========================================================
+our answers indicate that you should call your health care provider and describe your symptoms and/or your contact with someone who’s been diagnosed.
+                                                                         
+Be sure to indicate if you:
+                                                                         
+Are 65 or older.
+Suffer from a chronic health problem, such as diabetes, heart disease, cancer or lung disease.
+A health care or emergency worker who has been interacting with patients who may have COVID-19.
+Are immunocompromised, such as people with HIV/AIDS and cancer.
+Are pregnant, or had a baby within the last 2 weeks.
+Your doctor will determine next steps.
+==========================================================
