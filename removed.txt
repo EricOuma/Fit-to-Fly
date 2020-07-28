@@ -34,3 +34,28 @@ Are immunocompromised, such as people with HIV/AIDS and cancer.
 Are pregnant, or had a baby within the last 2 weeks.
 Your doctor will determine next steps.
 ==========================================================
+navigator.permissions.query({name:'camera'}).then(function(result) {
+  if (result.state == 'granted') {
+      handleSuccess();
+  } else if (result.state == 'prompt') {
+      
+  } else if (result.state == 'denied') {
+      // modal
+  }
+  result.onchange = function() {
+      
+  };
+});
+======================================================================
+var promise = new Promise(function(resolve, reject) {
+// do a thing, possibly async, then…
+navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+.then(handleSuccess)
+  
+if (streaming) {
+resolve("Stuff worked!");
+}
+else {
+reject(Error("It broke"));
+}
+});

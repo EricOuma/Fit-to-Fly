@@ -20,7 +20,12 @@ html, body {
     color: white;
     font-size: 50px;
 }
-video {
-    height: 60vh!important;
+/*video {*/
+/*    height: 60vh!important;*/
+/*}*/
+#cvOutput {
+    border: 2px solid #000000;
+    /*width: 640px;*/
+    /*height: 480px;*/
 }
 /*-----FOOTER------*/
