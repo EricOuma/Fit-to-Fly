@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!--MAIN CSS-->
+<link rel="stylesheet" href="css/styles.css">
+<script async src="js/opencv.js" onload="openCvReady()" type="text/javascript"></script>
+<video id="video" class="mr-2 d-none" width="320" height="240"></video>
+<canvas id="cvOutput" class="mx-auto" width="320" height="240">
+<script>
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+let video = document.getElementById('video');
+var streaming = false
+var handleSuccess = async function(stream) {
+  video.srcObject = stream;
+  video.play()
+  streaming = true
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+};
+
+
+function openCvReady() {
+  cv['onRuntimeInitialized'] = async () => {
+  navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: true
+    })
+    .then(handleSuccess).then(() => {
+        let canvasOutput = document.getElementById("cvOutput");
+        let canvasContext = canvasOutput.getContext('2d');
+        canvasContext.beginPath();
+        canvasContext.arc(160, 120, 100, 0, 2 * Math.PI);
+        canvasContext.lineWidth = 3;
+        canvasContext.strokeStyle = "blue";
+        canvasContext.stroke();
+        let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+        let dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
+        let cap = new cv.VideoCapture(video);
+        
+        const FPS = 30;
+        function processVideo() {
+          try {
+              if (!streaming) {
+                  // clean and stop.
+                  console.log('Clean and stop')
+                  src.delete();
+                  dst.delete();
+                  return;
+              }
+              let begin = Date.now();
+              // start processing.
+              cap.read(src);
+              cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+              cv.imshow('cvOutput', dst);
+              // schedule the next one.
+              let delay = 1000/FPS - (Date.now() - begin);
+              setTimeout(processVideo, delay);
+          } catch (err) {
+              //utils.printError(err);
+              console.log(err)
+          }
+        };
+        
+        // schedule the first one.
+        setTimeout(processVideo, 0);
+    });
+    // pause here until streaming is true
+
+  };
+}
+
+
+</script>
